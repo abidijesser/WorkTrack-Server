@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test 2FA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    input {
+      padding: 8px;
+      margin: 10px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .qr-code {
+      margin: 20px 0;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      white-space: pre-wrap;
+    }
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test 2FA Functionality</h1>
+  
+  <div class="container">
+    <h2>Generate 2FA</h2>
+    <p>Test the generate-2fa endpoint</p>
+    
+    <div>
+      <label for="token">JWT Token:</label>
+      <input type="text" id="token" placeholder="Enter your JWT token">
+    </div>
+    
+    <button onclick="generate2FA()">Generate 2FA</button>
+    
+    <div class="qr-code" id="qrCode"></div>
+    
+    <div class="result" id="generateResult"></div>
+  </div>
+  
+  <div class="container">
+    <h2>Verify 2FA</h2>
+    <p>Test the verify-2fa endpoint</p>
+    
+    <div>
+      <label for="secret">Secret (from generate step):</label>
+      <input type="text" id="secret" placeholder="Enter the secret from the generate step">
+    </div>
+    
+    <div>
+      <label for="verificationCode">Verification Code:</label>
+      <input type="text" id="verificationCode" placeholder="Enter the code from your authenticator app">
+    </div>
+    
+    <button onclick="verify2FA()">Verify 2FA</button>
+    
+    <div class="result" id="verifyResult"></div>
+  </div>
+  
+  <script>
+    // Store the secret from the generate step
+    let generatedSecret = '';
+    
+    async function generate2FA() {
+      const tokenInput = document.getElementById('token');
+      const resultDiv = document.getElementById('generateResult');
+      const qrCodeDiv = document.getElementById('qrCode');
+      
+      resultDiv.innerHTML = 'Generating 2FA...';
+      qrCodeDiv.innerHTML = '';
+      
+      try {
+        const response = await fetch('http://localhost:3002/api/auth/generate-2fa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokenInput.value}`
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.innerHTML = `<span class="success">Success!</span>\nSecret: ${data.secret}`;
+          qrCodeDiv.innerHTML = `<img src="${data.qrCode}" alt="QR Code">`;
+          generatedSecret = data.secret;
+          document.getElementById('secret').value = data.secret;
+        } else {
+          resultDiv.innerHTML = `<span class="error">Error: ${data.error}</span>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+    
+    async function verify2FA() {
+      const secretInput = document.getElementById('secret');
+      const codeInput = document.getElementById('verificationCode');
+      const resultDiv = document.getElementById('verifyResult');
+      
+      resultDiv.innerHTML = 'Verifying code...';
+      
+      try {
+        const response = await fetch('http://localhost:3002/api/auth/verify-2fa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            token: codeInput.value,
+            secret: secretInput.value
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.innerHTML = `<span class="success">Success! ${data.message}</span>`;
+        } else {
+          resultDiv.innerHTML = `<span class="error">Error: ${data.error}</span>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+      }
+    }
+  </script>
+</body>
+</html>
