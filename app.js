@@ -43,14 +43,14 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:3000",
       "https://abidijesser.github.io/WorkTrack",
       "http://worktrackk.me/WorkTrack",
+      "http://worktrackk.me",
+      "https://abidijesser.github.io",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "x-request-id"], // Ajout de 'x-request-id'
+    allowedHeaders: ["Content-Type", "Authorization", "x-request-id"], 
   })
 );
 app.use(express.json());
