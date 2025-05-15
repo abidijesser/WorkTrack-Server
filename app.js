@@ -46,6 +46,7 @@ app.use(
       "http://127.0.0.1:5173",
       "http://127.0.0.1:3000",
       "https://abidijesser.github.io/WorkTrack",
+      "http://worktrackk.me/WorkTrack",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
