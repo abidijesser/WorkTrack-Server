@@ -541,7 +541,7 @@ const forgotPassword = async (req, res) => {
       resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
     } else {
       // Regular users get the client application reset URL
-      resetUrl = `http://localhost:3000/#/reset-password/${resetToken}`;
+      resetUrl = `http://worktrackk.me/WorkTrack/#/reset-password/${resetToken}`;
     }
 
     // Email content

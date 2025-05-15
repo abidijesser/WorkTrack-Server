@@ -24,7 +24,7 @@ const createShareLink = async (req, res) => {
     );
 
     // Construire l'URL complète du lien de partage
-    const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+    const baseUrl = process.env.CLIENT_URL || 'http://worktrackk.me/WorkTrack';
     const shareUrl = `${baseUrl}/shared-document/${shareLink.token}`;
 
     res.status(201).json({
@@ -61,7 +61,7 @@ const getShareLinks = async (req, res) => {
     const shareLinks = await shareService.getShareLinksForDocument(documentId, req.user.id);
 
     // Construire les URLs complètes pour chaque lien
-    const baseUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+    const baseUrl = process.env.CLIENT_URL || 'http://worktrackk.me/WorkTrack';
     const shareLinksWithUrls = shareLinks.map(link => {
       // Convertir en objet simple si c'est un document Mongoose, sinon utiliser directement
       const linkObj = link.toObject ? link.toObject() : { ...link };
