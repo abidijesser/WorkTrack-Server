@@ -22,7 +22,7 @@ if (FACEBOOK_APP_ID && FACEBOOK_APP_SECRET) {
       {
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: "http://localhost:3001/api/auth/facebook/callback",
+        callbackURL: "https://worktrack-server-muu6.onrender.com/api/auth/facebook/callback",
         profileFields: ["id", "displayName", "email", "photos"],
       },
       async (accessToken, refreshToken, profile, done) => {
